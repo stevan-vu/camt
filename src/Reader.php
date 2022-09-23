@@ -34,6 +34,7 @@ class Reader
     public function readString(string $string): Message
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
+
         $dom->loadXML($string);
 
         return $this->readDom($dom);
