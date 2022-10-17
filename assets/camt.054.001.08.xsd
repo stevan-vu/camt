@@ -1949,8 +1949,7 @@ Based on ISO camt.054.001.08 (urn:iso:std:iso:20022:tech:xsd:camt.054.001.08)
   </xs:complexType>
   <xs:simpleType name="SICText">
     <xs:restriction base="xs:string">
-<!--     Fix regex-->
-<!--      <xs:pattern value="[\\x00-\\x20F-€ȘșȚț\-\s\\p{C}]+"/>-->
+      <xs:pattern value="[\\\\x00-\\\\x20F-\\. -€ȘșȚț\\-\\s\\\\p{C}]+"/>
 <!--      <xs:pattern value="[\p{IsBasicLatin}\p{IsLatin-1Supplement}\p{IsLatinExtended-A}€ȘșȚț-[\p{C}]]+"/>-->
     </xs:restriction>
   </xs:simpleType>
