@@ -6,18 +6,19 @@ namespace Genkgo\Camt\Decoder;
 
 use Genkgo\Camt\Decoder\Factory\DTO as DTOFactory;
 use Genkgo\Camt\DTO;
+use Genkgo\Camt\RecorderInterface;
 use SimpleXMLElement;
 
 abstract class Message
 {
-    protected Record $recordDecoder;
+    protected RecorderInterface $recordDecoder;
 
     protected DateDecoderInterface $dateDecoder;
 
     /**
      * Message constructor.
      */
-    public function __construct(Record $recordDecoder, DateDecoderInterface $dateDecoder)
+    public function __construct(RecorderInterface $recordDecoder, DateDecoderInterface $dateDecoder)
     {
         $this->recordDecoder = $recordDecoder;
         $this->dateDecoder = $dateDecoder;

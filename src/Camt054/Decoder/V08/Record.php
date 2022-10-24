@@ -1,81 +1,13 @@
 <?php
 
-declare(strict_types = 1);
+namespace Genkgo\Camt\Camt054\Decoder\V08;
 
-namespace Genkgo\Camt\Decoder;
-
+use Genkgo\Camt\Decoder\Record as BaseRecord;
 use Genkgo\Camt\DTO;
-use Genkgo\Camt\DTO\RecordWithBalances;
-use Genkgo\Camt\RecorderInterface;
-use Genkgo\Camt\Util\MoneyFactory;
 use SimpleXMLElement;
 
-class Record implements RecorderInterface
+class Record extends BaseRecord
 {
-    protected Entry $entryDecoder;
-
-    protected DateDecoderInterface $dateDecoder;
-
-    protected MoneyFactory $moneyFactory;
-
-    /**
-     * Record constructor.
-     */
-    public function __construct(Entry $entryDecoder, DateDecoderInterface $dateDecoder)
-    {
-        $this->entryDecoder = $entryDecoder;
-        $this->dateDecoder = $dateDecoder;
-        $this->moneyFactory = new MoneyFactory();
-    }
-
-    public function addBalances(RecordWithBalances $record, SimpleXMLElement $xmlRecord): void
-    {
-        $xmlBalances = $xmlRecord->Bal;
-        foreach ($xmlBalances as $xmlBalance) {
-            $money = $this->moneyFactory->create($xmlBalance->Amt, $xmlBalance->CdtDbtInd);
-            $date = $this->dateDecoder->decode((string) $xmlBalance->Dt->Dt);
-
-            if (!isset($xmlBalance->Tp, $xmlBalance->Tp->CdOrPrtry)) {
-                continue;
-            }
-            $code = (string) $xmlBalance->Tp->CdOrPrtry->Cd;
-
-            switch ($code) {
-                case 'OPBD':
-                case 'PRCD':
-                    $record->addBalance(DTO\Balance::opening(
-                        $money,
-                        $date
-                    ));
-
-                    break;
-                case 'OPAV':
-                    $record->addBalance(DTO\Balance::openingAvailable(
-                        $money,
-                        $date
-                    ));
-
-                    break;
-                case 'CLBD':
-                    $record->addBalance(DTO\Balance::closing(
-                        $money,
-                        $date
-                    ));
-
-                    break;
-                case 'CLAV':
-                    $record->addBalance(DTO\Balance::closingAvailable(
-                        $money,
-                        $date
-                    ));
-
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     public function addEntries(DTO\Record $record, SimpleXMLElement $xmlRecord): void
     {
         $index = 0;
@@ -122,8 +54,8 @@ class Record implements RecorderInterface
                 $entry->setBatchPaymentId((string) $xmlEntry->NtryDtls->TxDtls->Refs->PmtInfId);
             }
 
-            if (isset($xmlEntry->Sts) && (string) $xmlEntry->Sts) {
-                $entry->setStatus((string) $xmlEntry->Sts);
+            if (isset($xmlEntry->Sts->Cd) && (string) $xmlEntry->Sts->Cd) {
+                $entry->setStatus((string) $xmlEntry->Sts->Cd);
             }
 
             if (isset($xmlEntry->BkTxCd)) {

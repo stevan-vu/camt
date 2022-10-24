@@ -30,7 +30,7 @@ final class V08 implements MessageFormatInterface
     {
         $entryTransactionDetailDecoder = new Camt054\Decoder\EntryTransactionDetail(new Decoder\Date());
         $entryDecoder = new Decoder\Entry($entryTransactionDetailDecoder);
-        $recordDecoder = new Decoder\Record($entryDecoder, new Decoder\Date());
+        $recordDecoder = new Camt054\Decoder\V08\Record($entryDecoder, new Decoder\Date());
         $messageDecoder = new Camt054\Decoder\V08\Message($recordDecoder, new Decoder\Date());
 
         return new Decoder($messageDecoder, sprintf('/assets/%s.xsd', $this->getMsgId()));

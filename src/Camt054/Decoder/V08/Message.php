@@ -6,12 +6,19 @@ namespace Genkgo\Camt\Camt054\Decoder\V08;
 
 use Genkgo\Camt\Camt054\Decoder\Message as BaseMessage;
 use Genkgo\Camt\Camt054\DTO\V08 as Camt054V08DTO;
+use Genkgo\Camt\Decoder\DateDecoderInterface;
 use Genkgo\Camt\Decoder\Factory\DTO as DTOFactory;
 use Genkgo\Camt\DTO;
+use Genkgo\Camt\RecorderInterface;
 use SimpleXMLElement;
 
 class Message extends BaseMessage
 {
+    public function __construct(RecorderInterface $recordDecoder, DateDecoderInterface $dateDecoder)
+    {
+        parent::__construct($recordDecoder, $dateDecoder);
+    }
+
     /**
      * @inheritDoc
      */
